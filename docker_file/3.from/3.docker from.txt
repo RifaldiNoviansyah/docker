@@ -1,0 +1,12 @@
+from digunakan untuk membuat build stage dari image yang kita tentukan
+jarang sekali membuat docker image dari scratch (kosongan), biasanya membuat dari docker image dari docker image lain yang sudah ada
+didalam folder harus ada file Dockerfile
+
+perintah: 
+FROM image:version
+
+contoh:
+FROM alpine:3
+
+docker build-t rifaldidocker123/from 3.from
+

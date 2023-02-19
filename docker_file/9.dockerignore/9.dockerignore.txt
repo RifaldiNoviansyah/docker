@@ -1,0 +1,1 @@
+dockerignore sama seperti gitgnore

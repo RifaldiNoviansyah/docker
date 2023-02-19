@@ -1,0 +1,8 @@
+ENV adalah instruksi yang di gunakan untuk mengubah environment variabel, baik itu ketika tahapan build atau ketika jalan dalam docker container
+ENV yang sudah didefinisikan didalam Dockerfile bisa digunakan kembali dengan menggunakan sintak ${NAMA_ENV}
+environment variabel yang dibuat menggunakan instruksi ENV disimpan didalam docker image dan bisa dilihat menggunakan perintah docker image inspect
+selain itu, environment variabel juga bisa diganti nilainya ketika pembuatan docker container dengan perintah docker container create --env key = value
+
+berikut adalah format untuk instruksi ENV:
+ENV key=value
+ENV ke1=value1 key2=value2

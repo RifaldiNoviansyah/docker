@@ -1,0 +1,18 @@
+ADD adalah instruksi yang dapat digunakan untuk menambahkan file dari source ke dalam folder destination di docker image
+perintah ADD bisa mendeteksi apakah sebuah file source merupakan file kompres seperti tar.gz, gzip, dan lain lain.
+jika mendeteksi file source adalah berupa file kompres, maka secara otomatis file tersebut akan di extract dalam folder destination
+perintah ADD juga bisa mendukung banyak penambahan file sekaligus
+penambahan banyak file sekaligus di instruksi ADD menggunakan pattern di GO-Lang:
+https://pkg.go.dev/path/filepath#match
+
+format :
+ADD source destination
+ADD world.txt hello #menambah file world.txt ke folder hello
+ADD *.txt hello #menambah semua file.txt ke folder hello
+ADD * #menambah semua file 
+
+run:
+docker build -t rifaldidocker123/add 7.addInstruction
+docker container create --name add rifaldidocker123/add
+docker container start add
+docker container logs add

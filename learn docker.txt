@@ -1,0 +1,185 @@
+docker container = aplikasi hasil installer
+docker registry = tempat menyimpan docker image
+contoh dokccker registry "https://hub.docker.com/"
+
+docker image = installer
+docker image tidak bisa dihapus jika ada container di dalamnya
+docker image -> docker contaioner
+1 docker image bisa mempunyai banyak container
+
+
+// cek docker version
+docker version
+
+// run docker 
+systemctl start docker
+
+// cek docker image
+docker image ls
+
+// dwonload docker image
+web : hub.docker.com
+docker pull nameImage:tag
+contoh : docker pull redis:latest
+
+// deleted docker image
+docker image rm nameImage:tag
+contoh : docker image rm redis:latest
+
+// cek semua docker container 
+docker container ls -a
+
+// cek docker container yang sedang running
+docker container ls
+
+// membuat docker container
+*setelah membuat container, container tidak akan langsung jalan
+*jika di cel "docker container ls" tidak akan muncul
+docker container create --name nameContainer nameImage:tag
+contoh : docker container create --name contohredis redis:latest
+
+// menjalankan docker container
+*setelah dijalan cek di "docker container ls" harus ada
+docker container start containerid/namacontainer
+contoh : docker container start contohredis
+
+// mematikan docker container
+*setelah dijalan cek di "docker container ls" tidak akan ada, dan status excited
+docker container stop containerid/namacontainer
+contoh : docker container stop contohredis
+
+// mengahpus docker container
+*setelah di hapus cek "docker container ls -a" tidak akan ada
+docker container rm continerid/namacontainer
+contoh : docker container rm contohredis
+
+// docker container log
+docker container log containerid/containername
+contoh : docker container logs contohredis
+*jika ingin melihat log realtime
+docker container -f containerid/containername
+contoh : docker container logs -f contohredis
+
+// docker container exec
+*container hanya bisa diakses dari dalam container
+*docker exec digunakan untuk mengeksekusi kode program yang terdapat di dalam container
+docker container exec -i -t containerid/namacontainer /bin/bash
+-i = argument interaktif menjaga input tetap aktif
+-t = argument untuk alokasi pseudo-TTY (terminal akses)
+/bin/bash = contoh kode program yang terdapat dicontainer
+contoh : - docker container exec -i -t contohredis /bin/bash
+		 - redis-cli
+
+// docker container port 
+*biasanya aplikasi berjalan di port tertentu
+*port forwarding = meneruskan sebuah port yang terdapat disistem host nya ke dalam docker container
+docker container create --name container --publish posthost:portcontainer image:tag
+*jika ingin port forwarding lebih dari 1 kita tambahkan 2 kali parameter
+--publish or disingkat -p
+contoh : docker container create --name contohnginx --publish 8080:80 nginx:latest
+
+// docker container enviroment variabel
+*enviroment variabel adalah salah satu teknik agar agar konfigurasi aplikasi bisa diubah secara dinamis
+*kita bisa ubah konfigurasi aplikasi tanpa harus mengubah kode aplikasi nya
+docker create --name namacontainer --env KEY="value" --env KEY2="value" image:tag
+contoh : docker container create --name contohmongo --publish 27017:27017 --env MONGO_INITDB_ROOT_USERNAME=rifaldi --env MONGO_INITDB_ROOT_PASSWORD=rifaldi mongo:latest
+
+// docker container cek resources like cpu and memory
+docker container stats
+
+// docker container resources limit
+*default container akan menggunakan cpu dan memory linux/wind/mac
+*jika 1 container terlalu banyak makan cpu dan memory akan berpengaruh pada container lain
+*b = bytes, k = kilo byte, m = mega byte, g = giga byte
+*1.5 = setengah cpu core
+*untuk set memory --memory
+*untuk set cpu --cpus
+docker container create --name namecontainer --publish 8081:80 --memory 100m --cpus 0.5 nameimage:tag
+contoh : docker container create --name smallnginx --publish 8081:80 --memory 100m --cpus 0.5 nginx:latest
+
+// bind mounts
+*bind mounts = sharing file atau folder yang terdapat di sistem host ke container
+*berguna untuk mingirim konfigurasi dari luar container
+*berguna untuk menyimpan data yang dibuat diaplikasi didalam container ke dalam sistem host
+*jika file atau folder tidak ada disistem host, otomatis akan dibuatkan oleh docker
+*type = tipe mount
+*source = lokasi file di sistem host
+*destination = lokasi file di container
+*readonly = jika ada, maka file atau folder hanya bisa dibaca dicontainer, tidak bisa ditulis
+create -name namacontainer --mount "type=bind,source=folder,destination=folder,readonly" image:tag
+contoh = docker container create --name mongodata --mount "type=bind,source=/home/rifaldi/Downloads,destination=/data/db" --publish 27018:27017 --env MONGO_INITDB_ROOT_USERNAME=rifaldi --env MONGO_INITDB_ROOT_PASSWORD=rifaldi mongo:latest
+
+// docker volume 
+*docker volume versi terbaru docker bind
+*perbedaan ada di docker volume terdapat management volume
+*bisa create,look,deleted volume
+*docker volume storage untuk nyimpan data
+*bind data disimpan pada host
+*volume data dimanage oleh docker
+*by default semua data container disimpan di volume
+docker volume ls
+docker create volume namavolume
+contoh  : docker volume create mongovolume
+docker volume rm namavolume
+contoh : docker volume rm mongovolume
+
+// container volume
+*volume yang sudah kita buat, bisa kita gunakan dicontainer
+*jika container dihapus data akan tetap aman di volume
+
+docker container create --name mongovolume --mount "type=volume,source=/home/rifaldi/Downloads,destination=/data/db" --publish 27019:27017 --env MONGO_INITDB_ROOT_USERNAME=rifaldi --env MONGO_INITDB_ROOT_PASSWORD=rifaldi mongo:latest
+
+// backup volume
+*kita bisa manfaatkan container untuk backup
+docker exec -i -t mongovolume /bin/bash
+tar cvf /backup/backup.tar.gz /data
+*backup container run sekaligus menghapusnya
+
+docker container run --rm --name ubuntu --mount "type=bind,source=/home/rifaldi/Downloads,destination=/backup" --mount "type=volume,source=mongovolume,destination=/data/db" mongo:latest tar cvf /home/rifaldi/download/backup.tar.gz /data
+
+// docker network 
+*berfungsi untuk mengkoneksikan container dengan container lain dalam satu network yang sama
+*jika beberapa container dalam 1 network yang sama maka secara otomatis container tersebut bisa saling berkomunikasi
+*untuk membuat network di docker kita perlu menentukan driver yang akan kita gunakan
+*bridge = network secara virtual, memungkinkan container yang terkoneksi bridge network yang sama saling berkomunikasi
+*host = membuat network yang sama dengan sistem host, host hanya dijalankan didocker linux, tidak bisa di mac or windows
+*none = driver untuk membuat network yang tidak berkomunikasi
+docker network ls
+
+// docker network create
+docker network create --driver namadriver namanetwork
+contoh docker network create --driver birdger contohnetwork
+
+// docker network delete
+*tidak bisa dihapus jika masih digunakan oleh container 
+docker network rm namanetwork
+contoh = docker network rm contohnetwork
+
+// docker container network
+*continer bisa akses container lain dengan menyebutkan hostname dari containernya
+docker container create --name namacontainer --network namanetwork image:tag
+contoh : docker container create --name mongodb --network mongonetwork --env MONGO_INITDB_ROOT_USERNAME=rifaldi --env  MONGO_INITDB_ROOT_PASSWORD=rifald mongo:latest
+
+// docker menghapus container dari network
+docker network disconnect namanetwork namacontainer
+contoh = docker network disconnect mongonetwork mongodb
+
+// menambahkan container kenetwork
+*jika sudah terlanjur membuat container dan ingin menambahkannya ke container 
+docker network connect namanetwork namacontainer
+contoh = docker network connect mongonetwork mongodb
+
+// inpect 
+*jika ingin melihat setiap detail image,container,volume,network
+detail image = docker image inspect namaimage
+detail container = docker contianer inspect namacontainer
+detail volume = docker volume inspect namavolume
+detail network = docker network inspect namavolume
+
+// prune
+*jika ingin membersihkan image,container,volume,network
+menghapus container yang sudah distop = docker container prune
+menghapus image yang sudah distop = docker image prune
+menghapus network yang sudah distop = docker network prune
+menghapus volume yang sudah distop = docker volume prune
+jika ingin mengahapus sekaligus = docker system prune

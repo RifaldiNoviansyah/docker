@@ -1,0 +1,17 @@
+run adalah sebuah instruksi untuk mengeksekusi di dalam image pada saat build stage
+hasil RUN akan di commit dalam perubahaan image tersebut
+
+perintah run 
+
+RUN command
+
+RUN["executable","argument",".."]
+
+
+untuk melihat hasil/output gunakan perintah --progress=plain
+
+jika tidak menggunakan cache --no-cache 
+
+
+perintah 
+docker build -t rifaldidocker123/run 4.run --progress=plain --no-cache

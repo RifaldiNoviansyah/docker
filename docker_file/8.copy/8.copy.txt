@@ -1,0 +1,16 @@
+copy sama sepert add perbedaanya hanya pada 
+copy hanya melakukan copy file saja sedangkan add selain melakukan copy, dia bisa mendownload source dari url san secara otomatis melakukan extract file kompress
+namun best practice nya, sebisa mungkin menggunakan copy jika memang butuh melakukan extract file kompres, gunakan perintah run dan jalankan
+aplikasi untuk extract file kompres tersebut
+
+format :
+COPY source destination
+COPY world.txt hello #menambah file world.txt ke folder hello
+COPY *.txt hello #menambah semua file.txt ke folder hello
+COPY * #menambah semua file 
+
+run:
+docker build -t rifaldidocker123/copy 8.copy
+docker container create --name copy rifaldidocker123/copy
+docker container start copy
+docker container logs copy

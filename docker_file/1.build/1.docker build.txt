@@ -1,0 +1,8 @@
+untuk membuat dokcer image sendiri bisa menggunakan docker file
+untuk membuat docker image di dalam docker file menggunakan perintah docker build
+nama image akan dibuat secara random by default, cara custom nya kita gunakan -t
+
+
+rifaldidocker123 ambil dari username docker hub
+
+docker build-t rifaldidocker123/app:1.0.0 folder-dockerfile 

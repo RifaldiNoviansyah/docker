@@ -1,0 +1,7 @@
+file format harus "Dockerfile"
+
+# Komentar
+INSTRUCTION argument
+
+INSTRUCTION adalah perintah yang digunakan didocker file, lebih baik gunakan UPPERCASE
+argument adalah data argument untuk INSTRUCTION

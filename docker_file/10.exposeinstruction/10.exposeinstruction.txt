@@ -1,0 +1,17 @@
+expose adalah instruksi untuk memberitahu bahwa container akan listen port pada nomor dan protocol tertentu
+instruksi expose tidak akan mempublish port apapun sebenarnya, instruksi expose hanya digunakan sebagai dokumentasi untuk memberitahu yang membuat 
+docker container, bahwa docker image ini akan menggunakan port tertentu ketika dijalankan menjadi docker container
+
+expose instruksi format:
+
+EXPOSE port # default nya menggunakan tcp
+EXPOSE port/tcp
+EXPOSE port/udp
+
+
+docker build -t rifaldidocker123/expose 10.exposeinstruction
+docker image inspect rifaldidocker123/expose
+docker container create --name expose -p 8080:8080 rifaldidocker123/expose
+docker container start expose
+docker container ls
+curl localhost:8080
